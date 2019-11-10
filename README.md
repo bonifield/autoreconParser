@@ -56,12 +56,12 @@ file_server_service
 file_size
 headers
 hostname
-http_*
+http_* (header fields values, ex. http_content-type = text/html)
 http_host
-http_*_key
+http_*_key (preserved header field keys, ex. http_content-type_key = Content-Type)
 http_status
 http_status_title
-*_info (services)
+*_info (services, ex. ftp_info)
 ip
 is_disallowed
 locked
