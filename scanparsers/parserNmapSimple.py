@@ -36,7 +36,7 @@ def nmap_simple_parser(file, inputfilename):
 				d["duration"] = duration
 			except:
 				pass
-		if "open" in l and "/" in l:
+		if "open" in l and ("/tcp" in l or "/udp" in l):
 			try:
 				port = l.split()[0].split("/")[0]
 				d["port"] = int(port)
