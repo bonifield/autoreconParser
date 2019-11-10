@@ -1,5 +1,5 @@
 # autoreconParser
-Parses various scan outputs into JSON, and best used with [AutoRecon](https://github.com/Tib3rius/AutoRecon) or a matching file hierarchy.
+Parses various scan outputs into JSON, and best used with [AutoRecon](https://github.com/Tib3rius/AutoRecon) or a matching file hierarchy.  This project *will* be updated with Splunk configurations, dashboards, etc to make a one-stop shop for all things recon.
 
 ## Usage
 ```
