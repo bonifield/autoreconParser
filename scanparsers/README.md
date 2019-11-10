@@ -1,5 +1,5 @@
 ### place new parsers in this folder
-### add the following statement to the autoreconParser.py script in the parent directory (follow the naming convention)
+### add the following statement to the autoreconParser.py script in the parent directory (follow the naming convention, it makes tracking which parsers you have much easier)
 ```
 from scanparsers.YOURNEWPARSER import YOURNEWPARSERFUNCTION
 ```
