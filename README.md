@@ -33,7 +33,7 @@ autoreconParser.py [path-to-autorecon-output]
 ### Requirements
 - [AutoRecon](https://github.com/Tib3rius/AutoRecon) by [Tib3rius](https://github.com/Tib3rius/)
   - The version tested with this project is backed up as AutoRecon-master-20191110.zip in this repo, nothing in that project was altered for this one.
-OR
+- OR
 - Plaintext output from your preferred scanner, following the folder hierarchy IPADDRESS/scans/YOURSCAN.txt
 	- this was built with AutoRecon in mind, so you may have to make your own alterations
 
