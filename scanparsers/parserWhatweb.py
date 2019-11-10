@@ -26,19 +26,19 @@ def whatweb_parser(file, inputfilename):
 				except:
 					pass
 				try:
-					domain = url.split("/")[2].split(":")[0]
+					http_host = url.split("/")[2]
+					d["http_host"] = http_host
+				except:
+					pass
+				try:
+					domain = http_host.split(":")[0]
 					d["domain"] = domain
 					if ip_check.match(domain):
 						d["ip"] = domain
 				except:
 					pass
 				try:
-					http_host = url.split("/")[2]
-					d["http_host"] = http_host
-				except:
-					pass
-				try:
-					port = url.split("/")[2].split(":")[-1]
+					port = http_host.split(":")[1]
 					d["port"] = port
 				except:
 					pass
