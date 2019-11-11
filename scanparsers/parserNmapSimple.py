@@ -22,39 +22,39 @@ def nmap_simple_parser(file, inputfilename):
 		# basic line descriptions
 		if "Nmap scan report for" in l:
 			try:
-				ip = l.split()[4]
+				ip = l.split()[4].strip()
 				d["ip"] = ip
 			except:
 				pass
 		if "Scanned at" in l:
 			try:
-				start_time = str(l.split()[2]+" "+l.split()[3])
+				start_time = str(l.split()[2]+" "+l.split()[3]).strip()
 				d["start_time"] = start_time
-				timezone = l.split()[4]
+				timezone = l.split()[4].strip()
 				d["timezone"] = timezone
-				duration = l.split()[6]
+				duration = l.split()[6].strip()
 				d["duration"] = duration
 			except:
 				pass
 		if "open" in l and ("/tcp" in l or "/udp" in l):
 			try:
-				port = l.split()[0].split("/")[0]
+				port = l.split()[0].split("/")[0].strip()
 #				d["port"] = int(port)
 				d["port"] = port
 			except:
 				pass
 			try:
-				protocol = l.split()[0].split("/")[1]
+				protocol = l.split()[0].split("/")[1].strip()
 				d["protocol"] = protocol
 			except:
 				pass
 			try:
-				state = l.split()[1]
+				state = l.split()[1].strip()
 				d["state"] = state
 			except:
 				pass
 			try:
-				service = l.split()[2]
+				service = l.split()[2].strip()
 				d["service"] = service
 #				service_info = service # save the service before continuing downward
 #				port_parse_mode = 1 # flip on the pipe parser which should hit on the next line if present
@@ -64,13 +64,14 @@ def nmap_simple_parser(file, inputfilename):
 				d["reason"] = "no-response"
 			if "ttl" in line:
 				try:
-					reason = " ".join(l.split()[3:6])
+					reason = " ".join(l.split()[3:6]).strip()
 					d["reason"] = reason
 				except:
 					pass
 				try:
-					version = " ".join(l.split()[6:])
-					d["version"] = version
+					version = " ".join(l.split()[6:]).strip()
+					if len(version) > 0:
+						d["version"] = version
 				except:
 					pass
 
