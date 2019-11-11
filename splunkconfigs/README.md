@@ -46,6 +46,7 @@ Submit
 ```
 Settings --> Searches, reports, and alerts --> Filter by Owner "recon_"
 > Run
+(yes, run all of them at least once, and again after adding new data if unscheduled)
 ```
 
 ### Use the lookup tables (or definitions if desired) to fuel dashboard panels for near-instant results
