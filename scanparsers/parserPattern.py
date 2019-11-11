@@ -8,7 +8,14 @@ log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 def pattern_parser(file, inputfilename):
 	d = {}
 	# ip depends on the file path!!!
-	d["ip"] = inputfilename.split("/")[0]
+	try:
+		xx = inputfilename.split("/")
+		for x in xx:
+			if ip_check.match(x):
+				ip = x
+				d["ip"] = ip
+	except:
+		pass
 	d["log_time"] = log_time
 	d["scanner"] = "autorecon-patterns"
 	d["scanfile"] = inputfilename
