@@ -41,7 +41,26 @@ Settings --> Searches, reports, and alerts --> Filter by Owner "recon_"
 - pairs well with scheduled jobs to update the tables
 - creating a lookup definition, based on the associated lookup table, is necessary for automatic lookups (tl;dr enrichment)
 - yes, there is a leading pipe
-#### on the search command line
+#### load the table on the search command line or in a dashboard query tag
 ```
-a
+| inputlookup recon_GobusterWebPaths.csv
+| inputlookup recon_NbtscanMacHostnamesDomainInfo.csv
+| inputlookup recon_NiktoVulnInfo.csv
+| inputlookup recon_NmapSimpleInfo.csv
+| inputlookup recon_OnesixtyoneCommunityStrings.csv
+| inputlookup recon_OscannerUsersPasswords.csv
+| inputlookup recon_PatternsVulns.csv
+| inputlookup recon_RobotsDisallowed.csv
+| inputlookup recon_SmbclientShareWorkgroupInfo.csv
+| inputlookup recon_SmbmapIpPortSharePermissions.csv
+| inputlookup recon_SmbmapShareFilesInfo.csv
+| inputlookup recon_SnmpwalkUsersInfo.csv
+| inputlookup recon_WhatwebHttpHeaders.csv
+```
+#### if using a scheduled Saved Search, load the results directly
+```
+| loadjob savedsearch="YOUR-USERNAME:APPLICATION-NAME:REPORT-NAME"
+
+ex. load a job in the Search app context, which is owned by "nobody"
+| loadjob savedsearch="nobody:search:recon_NmapSimpleInfo"
 ```
