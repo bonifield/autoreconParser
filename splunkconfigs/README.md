@@ -19,21 +19,29 @@ Save
 - don't forget to select the right index!
 ```
 Settings --> Add Data --> Upload
-Select File, "master.json", Next
+Select File, "master.json"
+> Next
 Source type should auto-populate to _json, just "Save As" and make it "recon_json".  The data should preview on the right.
-Next
+> Next
 Host field value:  autoreconParser
 Index:  recon
+> Review
+Submit
+(then Start Searching to verify it appeared how you want, or else continue to the next step)
 ```
 
-
-### 
+### Run the saved searches to make easier tables to look at and load for dashboard panels, etc
+- if you plan on ingesting data regularly with autoreconParser, schedule the jobs under Edit --> Schedule (paid Splunk)
+```
+Settings --> Searches, reports, and alerts --> Filter by Owner "recon_"
+> Run
 ```
 
+### Use the lookup tables (or definitions if desired) to fuel dashboard panels for near-instant results
+- pairs well with scheduled jobs to update the tables
+- creating a lookup definition, based on the associated lookup table, is necessary for automatic lookups (tl;dr enrichment)
+- yes, there is a leading pipe
+#### on the search command line
 ```
-
-
-### 
-```
-
+a
 ```
