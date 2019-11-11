@@ -43,26 +43,26 @@ def whatweb_parser(file, inputfilename):
 				except:
 					pass
 				try:
-					uri = "/".join(url.split("/")[3:]).rstrip()
+					uri = "/".join(url.split("/")[3:]).strip()
 					if len(uri) > 0:
 						d["uri"] = uri
 				except:
 					pass
 				try:
-					filename = url.split("/")[-1].rstrip()
+					filename = url.split("/")[-1].strip()
 					if filename != http_host:
 						d["filename"] = filename
 				except:
 					pass
 			if "Status : " in l:
 				try:
-					http_status = " ".join(l.split()[2:]).rstrip()
+					http_status = " ".join(l.split()[2:]).strip()
 					d["http_status"] = http_status
 				except:
 					pass
 			if "Title : " in l:
 				try:
-					http_status_title = " ".join(l.split()[2:]).rstrip()
+					http_status_title = " ".join(l.split()[2:]).strip()
 					d["http_status_title"] = http_status_title
 				except:
 					pass
@@ -88,8 +88,8 @@ def whatweb_parser(file, inputfilename):
 				if ":" in line:
 					try:
 						x = l.split(":")
-						d["http_"+x[0].lower().lstrip().rstrip()+"_key"] = x[0]
-						d["http_"+x[0].lower().lstrip().rstrip()] = " ".join(x[1].split())
+						d["http_"+x[0].lower().strip()+"_key"] = x[0].strip()
+						d["http_"+x[0].lower().strip()] = " ".join(x[1].split()).strip().replace("'","").replace('"','')
 					except:
 						pass
 			if "HTTP Headers:" in l:
