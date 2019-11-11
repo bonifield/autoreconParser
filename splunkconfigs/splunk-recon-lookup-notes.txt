@@ -116,7 +116,7 @@ sourcetype=recon_json scanner=oscanner
 #=============
 sourcetype=recon_json scanner=autorecon-patterns
 | fillnull value=-
-| stats count by ip anonymous_login potentially_vulnerable http_server pattern scanner
+| stats count by ip anonymous_ftp_login potentially_vulnerable http_server pattern scanner
 | fields - count
 | sort +ip
 | outputlookup recon_PatternsVulns.csv
