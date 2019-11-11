@@ -77,4 +77,3 @@ ex. load a job in the Search app context, which is owned by "nobody"
 
 ### Troubleshooting
 - data not previewing when uploading new files: your VM is likely running low on disk space, make sure there is 5GB+
-- 
