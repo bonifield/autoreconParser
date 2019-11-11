@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 
-import json, sys
+import json, re, sys
 from datetime import datetime
 
 log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+# ipv4 support only
+ip_check = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
 def pattern_parser(file, inputfilename):
 	d = {}
