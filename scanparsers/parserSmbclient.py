@@ -55,12 +55,12 @@ def smbclient_parser(file, inputfilename):
 						xlist = [i for i in tablist if len(i)>0]
 #						print(xlist)
 ##						x = l[1].split()
-						share = xlist[0]
+						share = xlist[0].strip()
 						d["share"] = share
-						share_type = xlist[1]
+						share_type = xlist[1].strip()
 						d["share_type"] = share_type
 						try:
-							message = xlist[2]
+							message = xlist[2].strip()
 							d["message"] = message
 						except:
 							pass
@@ -74,9 +74,9 @@ def smbclient_parser(file, inputfilename):
 					if len(l) >= 2:
 #						print(l)
 						x = l[1].split()
-						hostname = x[0]
+						hostname = x[0].strip()
 						d["hostname"] = hostname
-						message = " ".join(x[1:])
+						message = " ".join(x[1:]).strip()
 						d["message"] = message
 #						print(json.dumps(d, indent=4))
 #						print(json.dumps(d)+"\n")
@@ -88,9 +88,9 @@ def smbclient_parser(file, inputfilename):
 					if len(l) >= 2:
 #						print(l)
 						x = l[1].split()
-						workgroup = x[0]
+						workgroup = x[0].strip()
 						d["workgroup"] = workgroup
-						workgroup_master = " ".join(x[1:])
+						workgroup_master = " ".join(x[1:]).strip()
 						d["workgroup_master"] = workgroup_master
 #						print(json.dumps(d, indent=4))
 #						print(json.dumps(d)+"\n")
