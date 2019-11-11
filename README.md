@@ -31,8 +31,8 @@ autoreconParser.py [path-to-autorecon-output]
 - svwar
 
 ## Known Issues
-- whatweb sometimes doubles it's output, I will not be working around this issue until much later if it persists
-	- the parser sets "modes", which results in wacky key names when it hits the duplicated results
+- WhatWeb sometimes doubles it's output, which results in wacky key names when the parser reaches the duplicated results
+	- simple fix:  it's trivial to avoid, just don't search for the weird field names in Splunk / jq unless you really want to
 
 ### Requirements
 - [AutoRecon](https://github.com/Tib3rius/AutoRecon) by [Tib3rius](https://github.com/Tib3rius/)
@@ -99,12 +99,15 @@ workgroup_master
 
 ### To Do
 - fix Nikto dictionary parsing after line 6 before each yield (better soft reset vs try/except del statements)
+- add Nmap script parsing
 - finish up the rest of the parsers
 - get MAC addresses from Nmap scans (oops!)
 - parse out emails from fields already collected (oops!)
 - clean up the excessive try/except statements
 	- grab errors and write them somewhere for additional processing
 - make alternate version for reading all logs in a directory, NOT locked into the ip/scans/* format
-- add Splunk dashboards, saved searches, macros, queries, reports, etc
+- add Splunk content
+	- dashboards, saved searches, macros, queries, reports, etc
 	- setup instructions for Splunk content
 - better "message" field parsing for additional details when available
+- better field synchronization when possible
