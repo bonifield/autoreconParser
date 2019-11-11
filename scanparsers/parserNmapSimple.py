@@ -54,7 +54,7 @@ def nmap_simple_parser(file, inputfilename):
 			except:
 				pass
 			try:
-				service = l.split()[2].strip()
+				service = l.split()[2].replace("?","").strip()
 				d["service"] = service
 #				service_info = service # save the service before continuing downward
 #				port_parse_mode = 1 # flip on the pipe parser which should hit on the next line if present
