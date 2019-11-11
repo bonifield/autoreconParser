@@ -39,7 +39,8 @@ def nmap_simple_parser(file, inputfilename):
 		if "open" in l and ("/tcp" in l or "/udp" in l):
 			try:
 				port = l.split()[0].split("/")[0]
-				d["port"] = int(port)
+#				d["port"] = int(port)
+				d["port"] = port
 			except:
 				pass
 			try:
@@ -74,7 +75,8 @@ def nmap_simple_parser(file, inputfilename):
 					pass
 
 			if d["port"]:
-				if type(d["port"]).__name__ == "int":
+#				if type(d["port"]).__name__ == "int":
+				if type(d["port"]).__name__ == "str":
 #					print(json.dumps(d, indent=4))
 #					print(json.dumps(d)+"\n")
 #					yield(json.dumps(d, indent=4))
