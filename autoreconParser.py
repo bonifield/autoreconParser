@@ -34,7 +34,8 @@ from scanparsers.parserRobots import robots_parser
 
 print()
 print("USAGE:  autoreconParser.py [path-to-autorecon-output]")
-print("\trun from the top-most folder above the individual IP output folders")
+print("\tex.")
+print("\tautoreconParser.py /my/output/dir/")
 print()
 
 
