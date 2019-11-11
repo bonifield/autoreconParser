@@ -79,7 +79,12 @@ def whatweb_parser(file, inputfilename):
 				except:
 					pass
 			if header_parse_mode == 1:
-				d["headers"] += line.lstrip()
+				# lstrip to keep the trailing newline, but check if there's anything else there
+				try:
+					if len(line.lstrip()) > 1
+						d["headers"] += line.lstrip()
+				except:
+					pass
 				if "HTTP/" in line:
 					try:
 						http_version = l.split("/")[1].split()[0]
