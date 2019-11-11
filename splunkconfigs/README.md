@@ -1,3 +1,13 @@
+## New Splunk configs, dashboards, saved searches, queries, etc will be placed here as they are created
+- savedsearches.conf
+  - an export of some basic queries to help load results; see below for usage, where to place the conf, etc
+- splunk-recon-lookup-notes.txt
+  - notes file with the saved searches that can be run manually, with some other bits of userful information
+
+### To Do
+- add dashboards, more queries, methods to tie the fields together
+
+# Instructions
 ### Install Splunk
 - I've previously gone over those instructions **[here](https://github.com/bonifield/splunk_on_security_onion/blob/master/README.md)**
 
