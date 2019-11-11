@@ -74,3 +74,7 @@ Settings --> Searches, reports, and alerts --> Filter by Owner "recon_"
 ex. load a job in the Search app context, which is owned by "nobody"
 | loadjob savedsearch="nobody:search:recon_NmapSimpleInfo"
 ```
+
+### Troubleshooting
+- data not previewing when uploading new files: your VM is likely running low on disk space, make sure there is 5GB+
+- 
