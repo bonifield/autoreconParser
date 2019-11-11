@@ -30,6 +30,10 @@ autoreconParser.py [path-to-autorecon-output]
 - sslscan
 - svwar
 
+## Known Issues
+- whatweb sometimes doubles it's output, I will not be working around this issue until much later if it persists
+	- the parser sets "modes", which results in wacky key names when it hits the duplicated results
+
 ### Requirements
 - [AutoRecon](https://github.com/Tib3rius/AutoRecon) by [Tib3rius](https://github.com/Tib3rius/)
   - The version tested with this project is backed up as AutoRecon-master-20191110.zip in this repo, nothing in that project was altered for this one.
@@ -40,6 +44,8 @@ autoreconParser.py [path-to-autorecon-output]
 ### Fields Generated
 ```
 anonymous_login
+certificate_issuer
+cert_* (attempts to parse fields from a certificate, ex. cert_cn, cert_ou etc)
 community_string
 community_string_type
 country
@@ -47,6 +53,7 @@ disallowed
 domain
 domain_controller_name
 duration
+email (still in progress, Nikto certs only)
 end_time
 exists
 file_date
@@ -91,10 +98,13 @@ workgroup_master
 ```
 
 ### To Do
-- add the rest of the parsers
+- fix Nikto dictionary parsing after line 6 before each yield (better soft reset vs try/except del statements)
+- finish up the rest of the parsers
 - get MAC addresses from Nmap scans (oops!)
+- parse out emails from fields already collected (oops!)
 - clean up the excessive try/except statements
 	- grab errors and write them somewhere for additional processing
 - make alternate version for reading all logs in a directory, NOT locked into the ip/scans/* format
 - add Splunk dashboards, saved searches, macros, queries, reports, etc
 	- setup instructions for Splunk content
+- better "message" field parsing for additional details when available
