@@ -15,51 +15,52 @@ def gobuster_parser(inputFile, inputfilename):
 		d["scanfile"] = inputfilename
 		l = line.split()
 		try:
-			url = l[0]
+			url = l[0].strip()
 			d["url"] = url
 		except:
 			pass
 		try:
-			http_status = l[2].replace(")","")
+			http_status = l[2].replace(")","").strip()
 			d["http_status"] = http_status
 		except:
 			pass
 		try:
-			size = l[4].replace("]","")
+			size = l[4].replace("]","").strip()
 			d["size"] = size
 		except:
 			pass
 		try:
 			# ipv4 support only
-			domain = url.split("/")[2].split(":")[0]
+			domain = url.split("/")[2].split(":")[0].strip()
 			d["domain"] = domain
 		except:
 			pass
 		try:
 			# ipv4 support only
 			if ip_check.match(domain):
-				d["ip"] = domain
+				d["ip"] = domain.strip()
 		except:
 			pass
 		try:
 			# ipv4 support only
-			http_host = url.split("/")[2]
+			http_host = url.split("/")[2].strip()
 			d["http_host"] = http_host
 		except:
 			pass
 		try:
-			port = url.split("/")[2].split(":")[-1]
+			port = url.split("/")[2].split(":")[-1].strip()
 			d["port"] = port
 		except:
 			pass
 		try:
-			uri = "/".join(url.split("/")[3:])
+			uri = "/".join(url.split("/")[3:]).strip()
 			d["uri"] = uri
 		except:
 			pass
 		try:
-			filename = url.split("/")[-1]
-			d["filename"] = filename
+			filename = url.split("/")[-1].strip()
+			if len(filename) > 0:
+				d["filename"] = filename
 		except:
 			pass
 		try:
