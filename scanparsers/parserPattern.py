@@ -21,7 +21,6 @@ def pattern_parser(file, inputfilename):
 	d["log_time"] = log_time
 	d["scanner"] = "autorecon-patterns"
 	d["scanfile"] = inputfilename
-	d["service"] = "oracle"
 	listy = []
 	for line in file:
 		if line.rstrip():
@@ -30,7 +29,7 @@ def pattern_parser(file, inputfilename):
 			if "VULNERABLE" in line:
 				d["potentially_vulnerable"] = "yes"
 			if "Anonymous FTP Enabled" in line:
-				d["anonymous_login"] = "yes"
+				d["anonymous_ftp_login"] = "yes"
 				d["potentially_vulnerable"] = "yes"
 			if "WebDAV is enabled" in line:
 				d["potentially_vulnerable"] = "yes"
@@ -39,8 +38,8 @@ def pattern_parser(file, inputfilename):
 			if "CS-Cart" in line:
 				d["potentially_vulnerable"] = "yes"
 			if "Identified HTTP Server" in line:
-				d["http_server"] = line.split("HTTP Server: ")[1].rstrip()
-	d["pattern"] = "\n".join(listy)
+				d["http_server"] = line.split("HTTP Server: ")[1].strip()
+	d["pattern"] = "\n".join(list(set(listy)))
 #	print(json.dumps(d, indent=4))
 #	print(json.dumps(d)+"\n")
 #	return(json.dumps(d, indent=4))
