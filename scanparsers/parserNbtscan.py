@@ -8,7 +8,7 @@ log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 def nbtscan_parser(file, inputfilename):
 	d = {}
 	d["log_time"] = log_time
-	d["scanner"] = "snmpwalk"
+	d["scanner"] = "nbtscan"
 	d["scanfile"] = inputfilename
 #	d["ip"] = inputfilename.split("/")[0]
 	for line in file:
