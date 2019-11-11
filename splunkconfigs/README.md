@@ -3,7 +3,7 @@
   - an export of some basic queries to help load results; see below for usage, where to place the conf, etc
 - splunk-recon-lookup-notes.txt
   - notes file with the saved searches that can be run manually, with some other bits of userful information
-  - please note that you should omit the outputlookup statements unless you absolutely want to change the table; alternatively, use append=T if you wish to new unique data (ensure any scheduled searches won't overwrite it though)
+  - please note that you should omit the outputlookup statements unless you absolutely want to change the table; alternatively, use append=true if you wish to new unique data (ensure any scheduled searches won't overwrite it though)
 
 ### To Do
 - add dashboards, more queries, methods to tie the fields together
