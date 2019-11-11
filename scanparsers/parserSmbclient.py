@@ -4,14 +4,14 @@ import json, re, sys
 from datetime import datetime
 
 log_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+# ipv4 support only
+ip_check = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 
 def smbclient_parser(file, inputfilename):
 	d = {}
 	d["log_time"] = log_time
 	d["scanner"] = "smbclient"
 	d["scanfile"] = inputfilename
-	# ip is dependant on being the first path in the given filename
-	# execute this from the top-level folder with the rest of the recon folders below
 	try:
 		xx = inputfilename.split("/")
 		for x in xx:
