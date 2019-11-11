@@ -32,7 +32,7 @@ autoreconParser.py [path-to-autorecon-output]
 
 ## Known Issues
 - WhatWeb sometimes doubles it's output, which results in wacky key names when the parser reaches the duplicated results
-	- simple fix:  it's trivial to avoid, just don't search for the weird field names in Splunk / jq unless you really want to
+	- simple fix:  it's trivial to avoid, just don't search for the weird field names in Splunk or jq unless you really want to
 
 ### Requirements
 - [AutoRecon](https://github.com/Tib3rius/AutoRecon) by [Tib3rius](https://github.com/Tib3rius/)
@@ -43,7 +43,7 @@ autoreconParser.py [path-to-autorecon-output]
 
 ### Fields Generated
 ```
-anonymous_login
+anonymous_ftp_login
 certificate_issuer
 cert_* (attempts to parse fields from a certificate, ex. cert_cn, cert_ou etc)
 community_string
@@ -54,13 +54,11 @@ domain
 domain_controller_name
 duration
 email (still in progress, Nikto certs only)
-end_time
 exists
 file_date
 filename
 file_permissions
 file_server_service
-file_size
 headers
 hostname
 http_* (header fields values, ex. http_content-type = text/html)
@@ -68,7 +66,6 @@ http_host
 http_*_key (preserved header field keys, ex. http_content-type_key = Content-Type)
 http_status
 http_status_title
-*_info (services, ex. ftp_info)
 ip
 is_disallowed
 locked
@@ -76,16 +73,23 @@ log_time
 mac
 message
 mib
-mib_info  
+mib_info
+pattern
+outdated
 port
 potentially_vulnerable
+protocol
 reason
+scanfile (the log file and path)
 scanner
+service
 share
 share_permissions
 share_type
 size
 start_time
+state
+subfolder
 summary
 timezone
 uri
@@ -95,6 +99,7 @@ version
 vuln_id
 workgroup
 workgroup_master
+*_info (services, ex. ftp_info)
 ```
 
 ### To Do
