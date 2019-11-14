@@ -41,7 +41,7 @@ sourcetype=recon_json scanner=gobuster
 
 
 #=============
-# recon_NbtscanMacHostnamesDomainInfo
+# recon_NbtscanHostnamesDomainInfo
 #=============
 sourcetype=recon_json scanner=nbtscan
 | fillnull value=-
@@ -206,6 +206,24 @@ sourcetype=recon_json scanner=whatweb
 | outputlookup recon_WhatwebHttpHeaders.csv
 ###
 | inputlookup recon_WhatwebHttpHeaders.csv
+
+
+
+#=============
+# recon_generateIpList
+#=============
+sourcetype=recon_json 
+| stats count by ip 
+| fields - count 
+| sort +ip
+| outputlookup recon_iplist.csv
+###
+| inputlookup recon_iplist.csv
+
+
+
+
+
 
 
 
