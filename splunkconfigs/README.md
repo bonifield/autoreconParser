@@ -22,10 +22,11 @@ Settings --> Server Settings --> General Settings --> Enable SSL (HTTPS) in Splu
 Settings --> Access Controls --> Roles --> [role] --> Indexes tab --> select the checkboxes in both Included and Default for desired index
 ```
 
-### After install, but before running Splunk, place savedsearches.conf here (substitute /opt/splunk for whatever $SPLUNK_HOME you set if doing something custom:
+### After install, place savedsearches.conf where Splunk can find it, then restart Splunk
 _ALTERNATIVELY, you can manually add the saved searches which are saved in [splunk-recon-lookup-notes.txt](https://github.com/bonifield/autoreconParser/blob/master/splunkconfigs/splunk-recon-lookup-notes.txt) by going to Settings --> "Searches, reports, and alerts" --> New Report (top-right corner)_
 ```
-/opt/splunk/etc/apps/search/local/savedsearches.conf
+sudo cp savedsearches.conf /opt/splunk/etc/apps/search/local/savedsearches.conf
+sudo /opt/splunk/bin/splunk restart
 ```
 
 ### Create an index named "recon":
