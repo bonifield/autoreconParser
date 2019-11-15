@@ -1,0 +1,1218 @@
+<!-- the onunloadCancelJobs argument will cancel the whole dashboard if one panel is told to stop, instead of rushing to click the cancel button on tons of panels -->
+<form onunloadCancelJobs="true">
+	<label>Recon Overview</label>
+	<!-- v 0.2 14 November 2019 -->
+	<!-- based on my Example Features dashboard at https://github.com/bonifield/helpers/blob/master/splunk-dashboard-example-features.txt -->
+	<description>for best results, drill down based on IP, then select "ALL" under scanners / IP drilldown will soft-reset the dashboard</description>
+
+	<!-- initialize a token, such as a placeholder or color token -->
+	<init>
+		<!-- the CDATA wrapper is for the Splunk XML parser, because it doesn't like curly brackets in the dashboard code -->
+		<!-- the color dictionary works like this:  fieldValue:displayBackgroundColor (used with format map in a panel, see below) -->
+		<set token="colorizeData"><![CDATA[{"low":#adff22, "medium":#ffd700, "high":#ff0000}]]></set>
+		<set token="colorizeShares"><![CDATA[{"READ, WRITE":#adff22, "READ ONLY":#ffd700, "high":#ff0000}]]></set>
+		<set token="selected_scanner"></set>
+	</init>
+
+	<fieldset submitButton="false">
+		<!-- this checkbox resets all drilldowns via "soft reset" of the mainQuery token -->
+		<input type="checkbox" token="drillDown" searchWhenChanged="true">
+			<label>Reset Drilldowns</label>
+			<choice value="| search *">Check/Re-Check to Reset</choice>
+		</input>
+		<input type="radio" token="radioTopRow" searchWhenChanged="false">
+		<!-- id="customBackgroundHoneydew">-->
+			<label>Show Top Row</label>
+			<default>Yes</default>
+			<choice value="yes">Yes</choice>
+			<choice value="no">No</choice>
+			<change>
+				<condition value="yes">
+					<set token="showTopRow">True</set>
+				</condition>
+				<condition value="no">
+					<unset token="showTopRow"></unset>
+				</condition>
+			</change>
+		</input>
+		<input type="radio" token="radioTables" searchWhenChanged="false" id="customBackgroundHoneydew">
+			<label>Table Display Toggle</label>
+			<default>Show Rollup Table</default>
+			<choice value="rollup">Show Rollup Table</choice>
+			<choice value="ipportprotocol">Show Exportable Table</choice>
+			<choice value="none">None</choice>
+			<change>
+				<condition value="rollup">
+					<set token="rollupTable">True</set>
+					<unset token="fullTable"></unset>
+					<unset token="ipportprotocolTable"></unset>
+				</condition>
+				<condition value="ipportprotocol">
+					<set token="ipportprotocolTable">True</set>
+					<unset token="rollupTable"></unset>
+					<unset token="fullTable"></unset>
+				</condition>
+				<condition value="none">
+					<unset token="ipportprotocolTable"></unset>
+					<unset token="rollupTable"></unset>
+					<unset token="fullTable"></unset>
+				</condition>
+			</change>
+		</input>
+		<!-- dropdown -->
+		<!-- yes, it only allows for one scanner at a time, this will be changed later -->
+		<input type="dropdown" token="selected_scanner" searchWhenChanged="false">
+			<label>Scanner Display</label>
+			<choice value="all">ALL</choice>
+			<choice value="none">NONE</choice>
+			<choice value="gobuster">gobuster</choice>
+			<choice value="nbtscan">nbtscan</choice>
+			<choice value="nikto">nikto</choice>
+			<choice value="nmap">nmap</choice>
+			<choice value="onesixtyone">onesixtyone</choice>
+			<choice value="oscanner">oscanner</choice>
+			<choice value="patterns">patterns</choice>
+			<choice value="robots">robots</choice>
+			<choice value="smbclient">smbclient</choice>
+			<choice value="smbmapshares">smbmap - shares only</choice>
+			<choice value="smbmapfiles">smbmap - shares+files</choice>
+			<choice value="smtpuserenum">smtpuserenum</choice>
+			<choice value="snmpwalk">snmpwalk</choice>
+			<choice value="whatweb">whatweb</choice>
+			<change>
+				<condition value="all">
+					<set token="gobuster">true</set>
+					<set token="nbtscan">true</set>
+					<set token="nikto">true</set>
+					<set token="nmap">true</set>
+					<set token="onesixtyone">true</set>
+					<set token="oscanner">true</set>
+					<set token="patterns">true</set>
+					<set token="robots">true</set>
+					<set token="smbclient">true</set>
+					<set token="smbmapshares">true</set>
+					<set token="smbmapfiles">true</set>
+					<set token="smtpuserenum">true</set>
+					<set token="snmpwalk">true</set>
+					<set token="whatweb">true</set>
+				</condition>
+				<condition value="none">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="gobuster">
+					<set token="gobuster">true</set>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="nbtscan">
+					<unset token="gobuster"></unset>
+					<set token="nbtscan">true</set>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="nikto">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<set token="nikto">true</set>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="nmap">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<set token="nmap">true</set>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="onesixtyone">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<set token="onesixtyone">true</set>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="oscanner">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<set token="oscanner">true</set>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="patterns">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<set token="patterns">true</set>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="robots">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<set token="robots">true</set>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="smbclient">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<set token="smbclient">true</set>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="smbmapshares">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<set token="smbmapshares">true</set>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="smbmapfiles">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<set token="smbmapfiles">true</set>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="smtpuserenum">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<set token="smtpuserenum">true</set>
+					<unset token="snmpwalk"></unset>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="snmpwalk">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<set token="snmpwalk">true</set>
+					<unset token="whatweb"></unset>
+				</condition>
+				<condition value="whatweb">
+					<unset token="gobuster"></unset>
+					<unset token="nbtscan"></unset>
+					<unset token="nikto"></unset>
+					<unset token="nmap"></unset>
+					<unset token="onesixtyone"></unset>
+					<unset token="oscanner"></unset>
+					<unset token="patterns"></unset>
+					<unset token="robots"></unset>
+					<unset token="smbclient"></unset>
+					<unset token="smbmapshares"></unset>
+					<unset token="smbmapfiles"></unset>
+					<unset token="smtpuserenum"></unset>
+					<unset token="snmpwalk"></unset>
+					<set token="whatweb">true</set>
+				</condition>
+			</change>
+			<default>none</default>
+		</input>
+		<input type="radio" token="radioHideHelp" searchWhenChanged="false">
+			<label>Hide Help Info</label>
+			<default>No</default>
+			<choice value="yes">Yes</choice>
+			<choice value="no">No</choice>
+			<change>
+				<condition value="no">
+					<set token="hideHelpInfo">True</set>
+				</condition>
+				<condition value="yes">
+					<unset token="hideHelpInfo"></unset>
+				</condition>
+			</change>
+		</input>
+	</fieldset>
+
+	<!-- initialize the drillDown token with an asterisk, so it initially captures all values on the dashboard, before the user clicks or hides anything -->
+	<init>
+		<set token="drillDown">| search *</set>
+	</init>
+
+	<!-- snmpwalk is omitted because there is too much mostly-useless MIB info -->
+	<search id="mainQuery">
+		<query>sourcetype=recon_json scanner=nmap | join ip [| search sourcetype=recon_json | stats values(scanner) AS scanners_found BY ip] | join ip [| search sourcetype=recon_json scanner="autorecon-patterns" | stats values(pattern) AS pattern BY ip] | fillnull value=- | stats count BY ip port protocol service reason state version pattern scanner scanners_found | fields - count | eval portservice=port+" "+service | sort +ip</query>
+		<earliest>-9999d@d</earliest>
+		<latest>now</latest>
+		<done>
+			<set token="jobSid">$job.sid$</set>
+		</done>
+	</search>
+
+	<search id="mainQuery2">
+		<query>| loadjob $jobSid$ $drillDown$</query>
+	</search>
+	
+	<!-- add the id attribute to an element to colorize it -->
+	<row depends="$hiddenstylemanager$">
+		<panel>
+			<html>
+				<style>
+					#customBackgroundLightGreen {
+						background-color: #90EE90;
+					}
+					#customBackgroundPaleGreen {
+						background-color: #98EE98;
+					}
+					#customBackgroundHoneydew {
+						background-color: #F0FFF0;
+					}
+				</style>
+			</html>
+		</panel>
+	</row>
+
+	<!-- token test area -->
+	<!--<row>
+		<panel>
+			<html>
+				<h3>$selected_scanner$</h3>
+			</html>
+		</panel>
+	</row>-->
+
+	<row depends="$hideHelpInfo$">
+		<panel>
+			<html>
+				<h3>Drilling down based on IP will "soft reset" the dashboard and show all relevant scanner results (if "ALL" is selected in Scanner Display)</h3>
+				<h3>Set Scanner Display to "NONE" before resetting</h3>
+				<h3>If adding new JSON data, re-run any Saved Searches (free version) or wait for the scheduled jobs to run (paid version of Splunk)</h3>
+			</html>
+		</panel>
+	</row>
+
+	<row depends="$showTopRow$">
+		<panel depends="$hideIpTable$">
+			<title>ip and distinct_ports</title>
+			<table>
+				<title>click an IP to drill down into the scanners</title>
+				<search base="mainQuery2">
+					<query> | stats dc(port) AS distinct_ports by ip | eval hide = "&#8856;" | sort +ip </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideIpTable">true</set>
+						</condition>
+						<condition>
+							<unset token="hideIpTable"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">15</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<!--<set token="drillDown"> | search ip="$click.value2$" </set>-->
+						<!-- hard sets the drilldown token so the user can see more scanner results -->
+						<set token="drillDown"> |search ip="$click.value2$" </set>
+					</condition>
+					<condition field="hide">
+						<set token="drillDown">$drillDown$ NOT ip="$row.ip$"</set>
+					</condition>
+					<condition field="distinct_ports"></condition>
+				</drilldown>
+			</table>
+		</panel>
+		<panel depends="$hidePortProtocolServiceTable$">
+			<title>port protocol service</title>
+			<table>
+				<title></title>
+				<search base="mainQuery2">
+					<query>| stats values(protocol) AS protocol, values(service) AS service by port | eval hide = "&#8856;" | fields - count | sort +port </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hidePortProtocolServiceTable">true</set>
+						</condition>
+						<condition>
+							<unset token="hidePortProtocolServiceTable"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">15</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="port">
+						<set token="drillDown"> $drillDown$ AND port="$click.value2$" </set>
+					</condition>
+					<condition field="protocol">
+						<set token="drillDown"> $drillDown$ AND protocol="$click.value2$" </set>
+					</condition>
+					<condition field="service">
+						<set token="drillDown"> $drillDown$ AND service="$click.value2$*" </set>
+					</condition>
+					<condition field="hide">
+						<set token="drillDown">$drillDown$ NOT port="$row.port$"</set>
+					</condition>
+					<condition field="count"></condition>
+				</drilldown>
+			</table>
+		</panel>
+		<panel depends="$hideVersionTable$">
+			<title>versions</title>
+			<table>
+				<title></title>
+				<search base="mainQuery2">
+					<query>| stats dc(ip) AS distinct_ips by version | eval hide = "&#8856;" | fields - count | sort +version </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideVersionTable">true</set>
+						</condition>
+						<condition>
+							<unset token="hideVersionTable"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">15</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="version">
+						<set token="drillDown"> $drillDown$ AND version="$click.value2$" </set>
+					</condition>
+					<condition field="distinct_ips"></condition>
+					<condition field="hide">
+						<set token="drillDown">$drillDown$ NOT version="$row.version$"</set>
+					</condition>
+					<condition field="count"></condition>
+				</drilldown>
+			</table>
+		</panel>
+		<panel depends="$hidePatternTable$">
+			<title>patterns</title>
+			<table>
+				<title></title>
+				<search base="mainQuery2">
+					<query>| stats count by pattern | eval hide = "&#8856;" | fields - count | sort +pattern </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hidePatternTable">true</set>
+						</condition>
+						<condition>
+							<unset token="hidePatternTable"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">5</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="pattern">
+						<set token="drillDown"> $drillDown$ AND pattern="$click.value2$" </set>
+					</condition>
+					<condition field="distinct_ips"></condition>
+					<condition field="hide">
+						<set token="drillDown">$drillDown$ NOT pattern="$row.pattern$"</set>
+					</condition>
+					<condition field="count"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<!-- ROLLUP AND EXPORTABLE TABLES -->
+
+	<row depends="$rollupTable$">
+		<panel>
+			<title>Recon Overview Table - Rollup</title>
+			<table>
+				<title></title>
+				<search base="mainQuery2">
+					<query>| stats values(portservice) AS portservice, values(version) AS version, values(scanners_found) AS scanners_found, values(pattern) AS pattern BY ip | eval hide = "&#8856;" | fields - count | sort +ip </query>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="portservice">
+						<set token="drillDown"> $drillDown$ AND portservice="$click.value2$" </set>
+					</condition>
+					<condition field="version">
+						<set token="drillDown"> $drillDown$ AND version="$click.value2$" </set>
+					</condition>
+					<condition field="pattern">
+						<set token="drillDown"> $drillDown$ AND pattern="$click.value2$" </set>
+					</condition>
+					<condition field="hide">
+						<set token="drillDown">$drillDown$ NOT ip="$row.ip$"</set>
+					</condition>
+					<condition field="scanners_found"></condition>
+					<condition field="count"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$ipportprotocolTable$">
+		<panel>
+			<title>Recon Overview Table - Exportable</title>
+			<table>
+				<title></title>
+				<search base="mainQuery2">
+					<query>| stats count by ip port protocol service version pattern scanners_found | fields - count | sort +ip</query>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="port">
+						<set token="drillDown"> $drillDown$ AND port="$click.value2$" </set>
+					</condition>
+					<condition field="protocol">
+						<set token="drillDown"> $drillDown$ AND protocol="$click.value2$" </set>
+					</condition>
+					<condition field="service">
+						<set token="drillDown"> $drillDown$ AND service="$click.value2$" </set>
+					</condition>
+					<condition field="version">
+						<set token="drillDown"> $drillDown$ AND version="$click.value2$" </set>
+					</condition>
+					<condition field="pattern">
+						<set token="drillDown"> $drillDown$ AND pattern="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<!-- SCANNER DISPLAY PANELS -->
+
+	<row depends="$gobuster$">
+		<panel depends="$hideGobuster$">
+			<title>gobuster</title>
+			<table>
+				<title>click an additional field to drill down; this panel does not paginate properly sometimes</title>
+				<search>
+					<query>| inputlookup recon_GobusterWebPaths.csv | table ip port http_status filename http_host domain url uri | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideGobuster">true</set>
+						</condition>
+						<condition>
+							<unset token="hideGobuster"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="port">
+						<set token="drillDown"> $drillDown$ AND port="$click.value2$" </set>
+					</condition>
+					<condition field="http_status">
+						<set token="drillDown"> $drillDown$ AND http_status="$click.value2$" </set>
+					</condition>
+					<condition field="filename">
+						<set token="drillDown"> $drillDown$ AND filename="$click.value2$" </set>
+					</condition>
+					<condition field="http_host">
+						<set token="drillDown"> $drillDown$ AND http_host="$click.value2$" </set>
+					</condition>
+					<condition field="domain">
+						<set token="drillDown"> $drillDown$ AND domain="$click.value2$" </set>
+					</condition>
+					<condition field="url">
+						<set token="drillDown"> $drillDown$ AND url="$click.value2$" </set>
+					</condition>
+					<condition field="uri">
+						<set token="drillDown"> $drillDown$ AND uri="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$nbtscan$">
+		<panel depends="$hideNbtscan$">
+			<title>nbtscan</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_NbtscanHostnamesDomainInfo.csv | table ip mac hostname domain domain_controller_name | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideNbtscan">true</set>
+						</condition>
+						<condition>
+							<unset token="hideNbtscan"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="mac">
+						<set token="drillDown"> $drillDown$ AND mac="$click.value2$" </set>
+					</condition>
+					<condition field="hostname">
+						<set token="drillDown"> $drillDown$ AND hostname="$click.value2$" </set>
+					</condition>
+					<condition field="domain">
+						<set token="drillDown"> $drillDown$ AND domain="$click.value2$" </set>
+					</condition>
+					<condition field="domain_controller_name">
+						<set token="drillDown"> $drillDown$ AND domain_controller_name="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$nikto$">
+		<panel depends="$hideNikto$">
+			<title>nikto</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_NiktoVulnInfo.csv | table ip port email hostname vuln_id uri reason message certificate_issuer cert_cn cert_email cert_l cert_o cert_ou cert_st | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideNikto">true</set>
+						</condition>
+						<condition>
+							<unset token="hideNikto"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="port">
+						<set token="drillDown"> $drillDown$ AND port="$click.value2$" </set>
+					</condition>
+					<condition field="email">
+						<set token="drillDown"> $drillDown$ AND email="$click.value2$" </set>
+					</condition>
+					<condition field="hostname">
+						<set token="drillDown"> $drillDown$ AND hostname="$click.value2$" </set>
+					</condition>
+					<condition field="vuln_id">
+						<set token="drillDown"> $drillDown$ AND vuln_id="$click.value2$" </set>
+					</condition>
+					<condition field="uri">
+						<set token="drillDown"> $drillDown$ AND uri="$click.value2$" </set>
+					</condition>
+					<condition field="reason">
+						<set token="drillDown"> $drillDown$ AND reason="$click.value2$" </set>
+					</condition>
+					<condition field="message">
+						<set token="drillDown"> $drillDown$ AND message="$click.value2$" </set>
+					</condition>
+					<condition field="certificate_issuer">
+						<set token="drillDown"> $drillDown$ AND certificate_issuer="$click.value2$" </set>
+					</condition>
+					<condition field="cert_cn">
+						<set token="drillDown"> $drillDown$ AND cert_cn="$click.value2$" </set>
+					</condition>
+					<condition field="cert_email">
+						<set token="drillDown"> $drillDown$ AND cert_email="$click.value2$" </set>
+					</condition>
+					<condition field="cert_l">
+						<set token="drillDown"> $drillDown$ AND cert_l="$click.value2$" </set>
+					</condition>
+					<condition field="cert_o">
+						<set token="drillDown"> $drillDown$ AND cert_o="$click.value2$" </set>
+					</condition>
+					<condition field="cert_ou">
+						<set token="drillDown"> $drillDown$ AND cert_ou="$click.value2$" </set>
+					</condition>
+					<condition field="cert_st">
+						<set token="drillDown"> $drillDown$ AND cert_st="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$nmap$">
+		<panel depends="$hideNmap$">
+			<title>nmap</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_NmapSimpleInfo.csv | table ip port protocol service reason state version | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideNmap">true</set>
+						</condition>
+						<condition>
+							<unset token="hideNmap"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="port">
+						<set token="drillDown"> $drillDown$ AND port="$click.value2$" </set>
+					</condition>
+					<condition field="protocol">
+						<set token="drillDown"> $drillDown$ AND protocol="$click.value2$" </set>
+					</condition>
+					<condition field="service">
+						<set token="drillDown"> $drillDown$ AND service="$click.value2$" </set>
+					</condition>
+					<condition field="reason">
+						<set token="drillDown"> $drillDown$ AND reason="$click.value2$" </set>
+					</condition>
+					<condition field="state">
+						<set token="drillDown"> $drillDown$ AND state="$click.value2$" </set>
+					</condition>
+					<condition field="version">
+						<set token="drillDown"> $drillDown$ AND version="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$onesixtyone$">
+		<panel depends="$hideOnesixtyone$">
+			<title>onesixtyone</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_OnesixtyoneCommunityStrings.csv | table ip community_string_type community_string message | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideOnesixtyone">true</set>
+						</condition>
+						<condition>
+							<unset token="hideOnesixtyone"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="community_string_type">
+						<set token="drillDown"> $drillDown$ AND community_string_type="$click.value2$" </set>
+					</condition>
+					<condition field="community_string">
+						<set token="drillDown"> $drillDown$ AND community_string="$click.value2$" </set>
+					</condition>
+					<condition field="message">
+						<set token="drillDown"> $drillDown$ AND message="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$oscanner$">
+		<panel depends="$hideOscanner$">
+			<title>oscanner</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_OscannerUsersPasswords.csv | table ip service username password exists locked | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideOscanner">true</set>
+						</condition>
+						<condition>
+							<unset token="hideOscanner"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="service">
+						<set token="drillDown"> $drillDown$ AND service="$click.value2$" </set>
+					</condition>
+					<condition field="username">
+						<set token="drillDown"> $drillDown$ AND username="$click.value2$" </set>
+					</condition>
+					<condition field="password">
+						<set token="drillDown"> $drillDown$ AND password="$click.value2$" </set>
+					</condition>
+					<condition field="exists">
+						<set token="drillDown"> $drillDown$ AND exists="$click.value2$" </set>
+					</condition>
+					<condition field="locked">
+						<set token="drillDown"> $drillDown$ AND locked="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$patterns$">
+		<panel depends="$hidePatterns$">
+			<title>patterns</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_PatternsVulns.csv | table ip anonymous_ftp_login potentially_vulnerable http_server pattern | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hidePatterns">true</set>
+						</condition>
+						<condition>
+							<unset token="hidePatterns"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="anonymous_ftp_login">
+						<set token="drillDown"> $drillDown$ AND anonymous_ftp_login="$click.value2$" </set>
+					</condition>
+					<condition field="potentially_vulnerable">
+						<set token="drillDown"> $drillDown$ AND potentially_vulnerable="$click.value2$" </set>
+					</condition>
+					<condition field="http_server">
+						<set token="drillDown"> $drillDown$ AND http_server="$click.value2$" </set>
+					</condition>
+					<condition field="pattern">
+						<set token="drillDown"> $drillDown$ AND pattern="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$robots$">
+		<panel depends="$hideRobots$">
+			<title>robots</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_RobotsDisallowed.csv | table ip is_disallowed disallowed uri | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideRobots">true</set>
+						</condition>
+						<condition>
+							<unset token="hideRobots"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="is_disallowed">
+						<set token="drillDown"> $drillDown$ AND is_disallowed="$click.value2$" </set>
+					</condition>
+					<condition field="disallowed">
+						<set token="drillDown"> $drillDown$ AND disallowed="$click.value2$" </set>
+					</condition>
+					<condition field="uri">
+						<set token="drillDown"> $drillDown$ AND uri="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$smbclient$">
+		<panel depends="$hideSmbclient$">
+			<title>smbclient</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_SmbclientShareWorkgroupInfo.csv | table ip share share_type message workgroup workgroup_master | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideSmbclient">true</set>
+						</condition>
+						<condition>
+							<unset token="hideSmbclient"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="share">
+						<set token="drillDown"> $drillDown$ AND share="$click.value2$" </set>
+					</condition>
+					<condition field="share_type">
+						<set token="drillDown"> $drillDown$ AND share_type="$click.value2$" </set>
+					</condition>
+					<condition field="message">
+						<set token="drillDown"> $drillDown$ AND message="$click.value2$" </set>
+					</condition>
+					<condition field="workgroup">
+						<set token="drillDown"> $drillDown$ AND workgroup="$click.value2$" </set>
+					</condition>
+					<condition field="workgroup_master">
+						<set token="drillDown"> $drillDown$ AND workgroup_master="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$smbmapshares$">
+		<panel depends="$hideSmbmapshares$">
+			<title>smbmap shares</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_SmbmapIpPortSharePermissions.csv | table ip port share share_permissions | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideSmbmapshares">true</set>
+						</condition>
+						<condition>
+							<unset token="hideSmbmapshares"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="port">
+						<set token="drillDown"> $drillDown$ AND port="$click.value2$" </set>
+					</condition>
+					<condition field="share">
+						<set token="drillDown"> $drillDown$ AND share="$click.value2$" </set>
+					</condition>
+					<condition field="share_type">
+						<set token="drillDown"> $drillDown$ AND share_type="$click.value2$" </set>
+					</condition>
+					<condition field="share_permissions">
+						<set token="drillDown"> $drillDown$ AND share_permissions="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$smbmapfiles$">
+		<panel depends="$hideSmbmapfiles$">
+			<title>smbmap shares and files</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_SmbmapShareFilesInfo.csv | table ip port share share_permissions filename file_permissions | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideSmbmapfiles">true</set>
+						</condition>
+						<condition>
+							<unset token="hideSmbmapfiles"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="port">
+						<set token="drillDown"> $drillDown$ AND port="$click.value2$" </set>
+					</condition>
+					<condition field="share">
+						<set token="drillDown"> $drillDown$ AND share="$click.value2$" </set>
+					</condition>
+					<condition field="share_permissions">
+						<set token="drillDown"> $drillDown$ AND share_permissions="$click.value2$" </set>
+					</condition>
+					<condition field="filename">
+						<set token="drillDown"> $drillDown$ AND filename="$click.value2$" </set>
+					</condition>
+					<condition field="file_permissions">
+						<set token="drillDown"> $drillDown$ AND file_permissions="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$snmpwalk$">
+		<panel depends="$hideSnmpwalk$">
+			<title>snmpwalk</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_SnmpwalkUsersInfo.csv | table ip username mib mib_info | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideSnmpwalk">true</set>
+						</condition>
+						<condition>
+							<unset token="hideSnmpwalk"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="username">
+						<set token="drillDown"> $drillDown$ AND username="$click.value2$" </set>
+					</condition>
+					<condition field="mib">
+						<set token="drillDown"> $drillDown$ AND mib="$click.value2$" </set>
+					</condition>
+					<condition field="mib_info">
+						<set token="drillDown"> $drillDown$ AND mib_info="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+	<row depends="$whatweb$">
+		<panel depends="$hideWhatweb$">
+			<title>whatweb</title>
+			<table>
+				<title></title>
+				<search>
+					<query>| inputlookup recon_WhatwebHttpHeaders.csv | table ip port domain http_server http_set-cookie headers | sort +ip $drillDown$ </query>
+					<progress>
+						<condition match="'job.resultCount' > 0">
+							<set token="hideWhatweb">true</set>
+						</condition>
+						<condition>
+							<unset token="hideWhatweb"/>
+						</condition>
+					</progress>
+				</search>
+				<option name="count">100</option>
+				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>
+				</format>
+				<drilldown>
+					<condition field="ip">
+						<set token="drillDown"> | search ip="$click.value2$" </set>
+					</condition>
+					<condition field="port">
+						<set token="drillDown"> $drillDown$ AND port="$click.value2$" </set>
+					</condition>
+					<condition field="domain">
+						<set token="drillDown"> $drillDown$ AND domain="$click.value2$" </set>
+					</condition>
+					<condition field="http_server">
+						<set token="drillDown"> $drillDown$ AND http_server="$click.value2$" </set>
+					</condition>
+					<condition field="http_set-cookie">
+						<set token="drillDown"> $drillDown$ AND http_set-cookie="$click.value2$" </set>
+					</condition>
+					<condition field="headers">
+						<set token="drillDown"> $drillDown$ AND headers="$click.value2$" </set>
+					</condition>
+					<condition field="scanners_found"></condition>
+				</drilldown>
+			</table>
+		</panel>
+	</row>
+
+</form>
