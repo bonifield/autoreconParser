@@ -12,6 +12,15 @@
 ## It looks like a lot, but it's a 5-minute process (or less if you're already familiar with Splunk)
 ### Install Splunk
 - I've previously gone over those instructions **[here](https://github.com/bonifield/splunk_on_security_onion/blob/master/README.md)**
+- tl;dr
+```
+sudo dpkg -i [yoursplunkfile].deb
+sudo /opt/splunk/bin/splunk start
+- Log into the Splunk GUI, and configure the server to use HTTPS
+Settings --> Server Settings --> General Settings --> Enable SSL (HTTPS) in Splunk Web? --> YES
+- Make the new indexes viewable on the homepage Data Summary and for any user account deemed necessary
+Settings --> Access Controls --> Roles --> [role] --> Indexes tab --> select the checkboxes in both Included and Default for desired index
+```
 
 ### After install, but before running Splunk, place savedsearches.conf here (substitute /opt/splunk for whatever $SPLUNK_HOME you set if doing something custom:
 _ALTERNATIVELY, you can manually add the saved searches which are saved in [splunk-recon-lookup-notes.txt](https://github.com/bonifield/autoreconParser/blob/master/splunkconfigs/splunk-recon-lookup-notes.txt) by going to Settings --> "Searches, reports, and alerts" --> New Report (top-right corner)_
