@@ -27,7 +27,7 @@ sudo cp savedsearches.conf /opt/splunk/etc/apps/search/local/savedsearches.conf
 sudo /opt/splunk/bin/splunk restart
 ```
 
-### Create an index named "recon":
+### Create an index named "recon"
 - use all defaults unless you really know what you're doing
 ```
 Settings --> Indexes --> New Index (top-right corner)
@@ -37,7 +37,7 @@ Save
 Settings --> Access Controls --> Roles --> [role] --> Indexes tab --> select the checkboxes in both Included and Default for desired index
 ```
 
-### Add your JSON data, also make a custom sourcetype "recon_json" (a clone of _json):
+### Add your JSON data, also make a custom sourcetype "recon_json" (a clone of _json)
 - if you data does not immediately preview for you, you may not have enough disk space in your VM
 - don't forget to select the right index, "recon"!
 ```
