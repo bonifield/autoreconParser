@@ -13,6 +13,7 @@
 - I've previously gone over those instructions **[here](https://github.com/bonifield/splunk_on_security_onion/blob/master/README.md)**
 
 ### After install, but before running Splunk, place savedsearches.conf here (substitute /opt/splunk for whatever $SPLUNK_HOME you set if doing something custom:
+- _ALTERNATIVELY, you can manually add the saved searches which are saved in [splunk-recon-lookup-notes.txt](https://github.com/bonifield/autoreconParser/blob/master/splunkconfigs/splunk-recon-lookup-notes.txt) by going to Settings --> "Searches, reports, and alerts" --> New Report (top-right corner)
 ```
 /opt/splunk/etc/apps/search/local/savedsearches.conf
 ```
