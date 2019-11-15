@@ -49,6 +49,20 @@ Settings --> Searches, reports, and alerts --> Filter by Owner "recon_"
 (yes, run all of them at least once, and again after adding new data if unscheduled)
 ```
 
+### Add the Recon Overview dashboard
+- you MUST run the saved searches because they fuel the dashboard panels
+- if using the paid version of Splunk, feel free to convert the code to the saved search results directly (because scheduling them will automate that much more of your life)
+```
+Top Ribbon --> Dashboards --> Create New Dashboard
+Title:  Recon Overview
+Permissions:  Shared in App
+> Create Dashboard
+Edit Dashboard --> Source (top-left corner)
+Paste the dashboard XML
+> Save (top-right corner)
+```
+
+## Randoms
 ### Use the lookup tables (or definitions if desired) to fuel dashboard panels for near-instant results
 - pairs well with scheduled jobs to update the tables
 - creating a lookup definition, based on the associated lookup table, is necessary for automatic lookups (tl;dr enrichment)
