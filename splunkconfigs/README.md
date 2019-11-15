@@ -12,6 +12,7 @@
 ## It looks like a lot, but it's a 5-minute process (or less if you're already familiar with Splunk)
 ### Install Splunk
 - I've previously gone over those instructions **[here](https://github.com/bonifield/splunk_on_security_onion/blob/master/README.md)**
+- Please do not install this on your OSCP Kali, if that's what you are using this for.  Use Ubuntu or Security Onion instead (see my other [project](https://github.com/bonifield/splunk_on_security_onion) for that setup)
 - tl;dr
 ```
 sudo dpkg -i [yoursplunkfile].deb
