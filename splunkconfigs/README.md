@@ -9,6 +9,7 @@
 - add dashboards, more queries, methods to tie the fields together, streamline names in Splunk lookups
 
 # Instructions
+## It looks like a lot, but it's a 5-minute process (or less if you're already familiar with Splunk)
 ### Install Splunk
 - I've previously gone over those instructions **[here](https://github.com/bonifield/splunk_on_security_onion/blob/master/README.md)**
 
