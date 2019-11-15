@@ -37,7 +37,7 @@ Index Name:  recon
 Save
 ```
 
-### Start Splunk and add data, while also making a custom sourcetype "recon_json" (or choose your own name):
+### Start Splunk and add your JSON data, also make a custom sourcetype "recon_json" (a clone of _json):
 - if you data does not immediately preview for you, you may not have enough disk space in your VM
 - don't forget to select the right index!
 ```
