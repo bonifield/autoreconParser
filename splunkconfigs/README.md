@@ -6,7 +6,7 @@
   - please note that you should omit the outputlookup statements unless you absolutely want to change the table; alternatively, use append=true if you wish to new unique data (ensure any scheduled searches won't overwrite it though)
 
 ### To Do
-- add dashboards, more queries, methods to tie the fields together
+- add dashboards, more queries, methods to tie the fields together, streamline names in Splunk lookups
 
 # Instructions
 ### Install Splunk
