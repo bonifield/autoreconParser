@@ -63,7 +63,7 @@ Settings --> Searches, reports, and alerts --> Filter by Owner "recon_"
 
 ### Add the Recon Overview dashboard
 - you MUST run the saved searches because they fuel the dashboard panels
-- if using the paid version of Splunk, feel free to convert the code to the saved search results directly (because scheduling them will automate that much more of your life)
+- if using the paid version of Splunk, feel free to convert the inputlookup statements to saved search results directly (because scheduling them will automate that much more of your life)
 ```
 Top Ribbon --> Dashboards --> Create New Dashboard
 Title:  Recon Overview
