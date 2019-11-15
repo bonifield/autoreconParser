@@ -18,8 +18,6 @@ sudo dpkg -i [yoursplunkfile].deb
 sudo /opt/splunk/bin/splunk start
 - Log into the Splunk GUI, and configure the server to use HTTPS
 Settings --> Server Settings --> General Settings --> Enable SSL (HTTPS) in Splunk Web? --> YES
-- Make the new indexes viewable on the homepage Data Summary and for any user account deemed necessary
-Settings --> Access Controls --> Roles --> [role] --> Indexes tab --> select the checkboxes in both Included and Default for desired index
 ```
 
 ### After install, place savedsearches.conf where Splunk can find it, then restart Splunk
@@ -35,6 +33,8 @@ sudo /opt/splunk/bin/splunk restart
 Settings --> Indexes --> New Index (top-right corner)
 Index Name:  recon
 Save
+- Make the new indexes viewable on the homepage Data Summary and for any user account deemed necessary
+Settings --> Access Controls --> Roles --> [role] --> Indexes tab --> select the checkboxes in both Included and Default for desired index
 ```
 
 ### Add your JSON data, also make a custom sourcetype "recon_json" (a clone of _json):
