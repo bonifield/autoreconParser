@@ -18,6 +18,7 @@ sudo dpkg -i [yoursplunkfile].deb
 sudo /opt/splunk/bin/splunk start
 - Log into the Splunk GUI, and configure the server to use HTTPS
 Settings --> Server Settings --> General Settings --> Enable SSL (HTTPS) in Splunk Web? --> YES
+- change the port from 8000 to 8443 if desired
 ```
 
 ### After install, place savedsearches.conf where Splunk can find it, then restart Splunk
