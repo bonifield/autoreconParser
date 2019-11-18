@@ -103,6 +103,8 @@ workgroup_master
 ```
 
 ### To Do
+- the Nmap basic parser doesn't purge the version from the previous line that had one if the current one does not (must fix!)
+- add _commands.log output and timestamps wherever possible
 - fix Nikto dictionary parsing after line 6 before each yield (better soft reset vs try/except del statements)
 - add Nmap script parsing
 - finish up the rest of the parsers
