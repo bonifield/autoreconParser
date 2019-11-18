@@ -39,6 +39,16 @@ Save
 Settings --> Access Controls --> Roles --> [role] --> Indexes tab --> select the checkboxes in both Included and Default for desired index
 ```
 
+### Upload http_status_table.csv and make a matching Lookup Definition
+```
+Upload the csv 
+Settings --> Lookups --> Lookup Tables
+- Upload the csv, be sure to name it the same and don't forget the extension
+Settings --> Lookups --> Lookup Definitions --> Add New
+- File-Based, name it the same as the file but without the extension
+TODO - polish these steps
+```
+
 ### Add your JSON data, also make a custom sourcetype "recon_json" (a clone of _json)
 - if you data does not immediately preview for you, you may not have enough disk space in your VM
 - don't forget to select the right index, "recon"!
