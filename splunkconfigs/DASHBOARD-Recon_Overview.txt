@@ -1,7 +1,7 @@
 <!-- the onunloadCancelJobs argument will cancel the whole dashboard if one panel is told to stop, instead of rushing to click the cancel button on tons of panels -->
 <form onunloadCancelJobs="true">
 	<label>Recon Overview</label>
-	<!-- v 0.3 17 November 2019 -->
+	<!-- v 0.3 18 November 2019 -->
 	<!-- based on my Example Features dashboard at https://github.com/bonifield/helpers/blob/master/splunk-dashboard-example-features.txt -->
 	<description>for best results, drill down based on IP, then select "ALL" under scanners / IP drilldown will soft-reset the dashboard</description>
 
@@ -360,9 +360,9 @@
 		<set token="drillDown">| search *</set>
 	</init>
 
-	<!-- snmpwalk is omitted because there is too much mostly-useless MIB info -->
 	<search id="mainQuery">
-		<query>sourcetype=recon_json scanner=nmap | join ip [| search sourcetype=recon_json | stats values(scanner) AS scanners_found BY ip] | join ip [| search sourcetype=recon_json scanner="autorecon-patterns" | stats values(pattern) AS pattern BY ip] | fillnull value=- | stats count BY ip port protocol service reason state version pattern scanner scanners_found | fields - count | eval portservice=port+" "+service | sort +ip</query>
+		<!--<query>sourcetype=recon_json scanner=nmap | join ip [| search sourcetype=recon_json | stats values(scanner) AS scanners_found BY ip] | join ip [| search sourcetype=recon_json scanner="autorecon-patterns" | stats values(pattern) AS pattern BY ip] | fillnull value=- | stats count BY ip port protocol service reason state version pattern scanner scanners_found | fields - count | eval portservice=port+" "+service | sort +ip</query>-->
+		<query>sourcetype=recon_json scanner=nmap | join ip [| search sourcetype=recon_json | stats values(scanner) AS scanners_found BY ip] | fillnull value=- | stats count BY ip port protocol service reason state version scanner scanners_found | fields - count | eval portservice=port+" "+service | sort +ip</query>
 		<earliest>-9999d@d</earliest>
 		<latest>now</latest>
 		<done>
@@ -512,7 +512,7 @@
 				</drilldown>
 			</table>
 		</panel>
-		<panel depends="$hidePatternTable$">
+		<!--<panel depends="$hidePatternTable$">
 			<title>patterns</title>
 			<table>
 				<title></title>
@@ -542,7 +542,7 @@
 					<condition field="count"></condition>
 				</drilldown>
 			</table>
-		</panel>
+		</panel>-->
 	</row>
 
 	<!-- ROLLUP AND EXPORTABLE TABLES -->
@@ -553,7 +553,8 @@
 			<table>
 				<title></title>
 				<search base="mainQuery2">
-					<query>| stats values(portservice) AS portservice, values(version) AS version, values(scanners_found) AS scanners_found, values(pattern) AS pattern BY ip | eval hide = "&#8856;" | fields - count | sort +ip </query>
+					<!--<query>| stats values(portservice) AS portservice, values(version) AS version, values(scanners_found) AS scanners_found, values(pattern) AS pattern BY ip | eval hide = "&#8856;" | fields - count | sort +ip </query>-->
+					<query>| stats values(portservice) AS portservice, values(version) AS version, values(scanners_found) AS scanners_found BY ip | eval hide = "&#8856;" | fields - count | sort +ip </query>
 				</search>
 				<option name="count">100</option>
 				<format type="color" field="priority">
@@ -569,9 +570,9 @@
 					<condition field="version">
 						<set token="drillDown"> $drillDown$ AND version="$click.value2$" </set>
 					</condition>
-					<condition field="pattern">
+					<!--<condition field="pattern">
 						<set token="drillDown"> $drillDown$ AND pattern="$click.value2$" </set>
-					</condition>
+					</condition>-->
 					<condition field="hide">
 						<set token="drillDown">$drillDown$ NOT ip="$row.ip$"</set>
 					</condition>
