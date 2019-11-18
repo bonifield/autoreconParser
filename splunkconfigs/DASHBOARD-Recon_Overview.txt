@@ -1,7 +1,7 @@
 <!-- the onunloadCancelJobs argument will cancel the whole dashboard if one panel is told to stop, instead of rushing to click the cancel button on tons of panels -->
 <form onunloadCancelJobs="true">
 	<label>Recon Overview</label>
-	<!-- v 0.2 14 November 2019 -->
+	<!-- v 0.3 17 November 2019 -->
 	<!-- based on my Example Features dashboard at https://github.com/bonifield/helpers/blob/master/splunk-dashboard-example-features.txt -->
 	<description>for best results, drill down based on IP, then select "ALL" under scanners / IP drilldown will soft-reset the dashboard</description>
 
@@ -627,7 +627,7 @@
 			<table>
 				<title>click an additional field to drill down; this panel does not paginate properly sometimes</title>
 				<search>
-					<query>| inputlookup recon_GobusterWebPaths.csv | table ip port http_status filename http_host domain url uri | sort +ip $drillDown$ </query>
+					<query>| inputlookup recon_GobusterWebPaths.csv | lookup http_status_table status AS http_status OUTPUTNEW status_description AS http_status_description status_type AS http_status_type | table ip port http_status http_status_description http_status_type filename http_host domain url uri | sort +http_status $drillDown$ </query>
 					<progress>
 						<condition match="'job.resultCount' > 0">
 							<set token="hideGobuster">true</set>
@@ -650,6 +650,12 @@
 					</condition>
 					<condition field="http_status">
 						<set token="drillDown"> $drillDown$ AND http_status="$click.value2$" </set>
+					</condition>
+					<condition field="http_status_description">
+						<set token="drillDown"> $drillDown$ AND http_status_description="$click.value2$" </set>
+					</condition>
+					<condition field="http_status_type">
+						<set token="drillDown"> $drillDown$ AND http_status_type="$click.value2$" </set>
 					</condition>
 					<condition field="filename">
 						<set token="drillDown"> $drillDown$ AND filename="$click.value2$" </set>
