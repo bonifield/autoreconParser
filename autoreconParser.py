@@ -3,7 +3,11 @@
 #===========================
 #
 # AutoRecon Parser
+#
+# v1.0.1 - 2020-01-24
+#	- added epoch timestamps to the output filename
 # v1.0 - 2019-11-10
+#
 # github.com/bonifield
 # AutoRecon found at:  github.com/Tib3rius
 #
@@ -15,7 +19,7 @@
 #===========================
 
 
-import glob, os, sys, timeit
+import glob, os, sys, time, timeit
 from scanparsers.parserGobuster import gobuster_parser
 from scanparsers.parserNbtscan import nbtscan_parser
 from scanparsers.parserNiktoPlain import nikto_parser
@@ -40,11 +44,13 @@ print()
 
 
 files = glob.glob(sys.argv[1]+'/*/scans/*')
+epoch = str(int(time.time()))
+outputFile = "autoreconParser-Combined-{}.json".format(epoch)
 
 
 print("Starting to combine files.  This may take a minute...")
 start = timeit.default_timer()
-with open("master.json", "w") as masterFile:
+with open(outputFile, "w") as masterFile:
 	for i in files:
 
 		if "gobuster" in i:
@@ -144,5 +150,5 @@ with open("master.json", "w") as masterFile:
 
 masterFile.close()
 stop = timeit.default_timer()
-print("Made master.json in {} seconds.".format(str(stop-start)))
+print("Made {} in {} seconds.".format(outputFile, str(stop-start)))
 print()
