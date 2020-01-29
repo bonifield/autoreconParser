@@ -29,10 +29,10 @@ autoreconParser.py [path-to-autorecon-output]
 - showmount
 - sslscan
 - svwar
+- wpscan
 
 ## Known Issues
-- WhatWeb sometimes doubles it's output, which results in wacky key names when the parser reaches the duplicated results
-	- simple fix:  it's trivial to avoid, just don't search for the weird field names in Splunk or jq unless you really want to
+- let me know
 
 ### Requirements
 - [AutoRecon](https://github.com/Tib3rius/AutoRecon) by [Tib3rius](https://github.com/Tib3rius/)
