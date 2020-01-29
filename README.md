@@ -1,6 +1,18 @@
 # autoreconParser
 Parses various scan outputs into JSON, meant to be used with the awesome [AutoRecon](https://github.com/Tib3rius/AutoRecon) or artifacts in a matching directory structure.  Optional Splunk content to help with the artifact analysis is included in the [splunkconfigs folder](https://github.com/bonifield/autoreconParser/tree/master/splunkconfigs).
 
+## Fixes
+```
+v1.0.2 - 2020-01-28
+- updated WhatWeb parser and main script, fixed multiple issues with GoBuster parser
+
+v1.0.1 - 2020-01-24
+- added epoch timestamps to the output filename
+
+v1.0 - 2019-11-10
+- initial release
+```
+
 ## Usage
 ```
 autoreconParser.py [path-to-autorecon-output]
