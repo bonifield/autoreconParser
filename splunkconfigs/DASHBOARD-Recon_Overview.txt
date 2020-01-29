@@ -1,7 +1,7 @@
 <!-- the onunloadCancelJobs argument will cancel the whole dashboard if one panel is told to stop, instead of rushing to click the cancel button on tons of panels -->
 <form onunloadCancelJobs="true">
 	<label>Recon Overview</label>
-	<!-- v 0.3 18 November 2019 -->
+	<!-- v 0.3 28 January 2020 -->
 	<!-- based on my Example Features dashboard at https://github.com/bonifield/helpers/blob/master/splunk-dashboard-example-features.txt -->
 	<description>for best results, drill down based on IP, then select "ALL" under scanners / IP drilldown will soft-reset the dashboard</description>
 
@@ -9,7 +9,7 @@
 	<init>
 		<!-- the CDATA wrapper is for the Splunk XML parser, because it doesn't like curly brackets in the dashboard code -->
 		<!-- the color dictionary works like this:  fieldValue:displayBackgroundColor (used with format map in a panel, see below) -->
-		<set token="colorizeData"><![CDATA[{"low":#adff22, "medium":#ffd700, "high":#ff0000}]]></set>
+		<set token="colorizeData"><![CDATA[{"green":#adff22, "orange":#ffd700, "red":#ff0000, "Successful":#adff22, "medium":#ffd700, "high":#ff0000}]]></set>
 		<set token="colorizeShares"><![CDATA[{"READ, WRITE":#adff22, "READ ONLY":#ffd700, "high":#ff0000}]]></set>
 		<set token="selected_scanner"></set>
 	</init>
@@ -639,7 +639,7 @@
 					</progress>
 				</search>
 				<option name="count">100</option>
-				<format type="color" field="priority">
+				<format type="color" field="http_status_type">
 					<colorPalette type="map">$colorizeData$</colorPalette>
 				</format>
 				<drilldown>
@@ -727,7 +727,7 @@
 			<table>
 				<title></title>
 				<search>
-					<query>| inputlookup recon_NiktoVulnInfo.csv | table ip port email hostname vuln_id uri reason message certificate_issuer cert_cn cert_email cert_l cert_o cert_ou cert_st | sort +ip $drillDown$ </query>
+					<query>| inputlookup recon_NiktoVulnInfo.csv | table ip port email hostname vuln_id uri reason message | sort +ip $drillDown$ </query>
 					<progress>
 						<condition match="'job.resultCount' > 0">
 							<set token="hideNikto">true</set>
@@ -765,27 +765,6 @@
 					</condition>
 					<condition field="message">
 						<set token="drillDown"> $drillDown$ AND message="$click.value2$" </set>
-					</condition>
-					<condition field="certificate_issuer">
-						<set token="drillDown"> $drillDown$ AND certificate_issuer="$click.value2$" </set>
-					</condition>
-					<condition field="cert_cn">
-						<set token="drillDown"> $drillDown$ AND cert_cn="$click.value2$" </set>
-					</condition>
-					<condition field="cert_email">
-						<set token="drillDown"> $drillDown$ AND cert_email="$click.value2$" </set>
-					</condition>
-					<condition field="cert_l">
-						<set token="drillDown"> $drillDown$ AND cert_l="$click.value2$" </set>
-					</condition>
-					<condition field="cert_o">
-						<set token="drillDown"> $drillDown$ AND cert_o="$click.value2$" </set>
-					</condition>
-					<condition field="cert_ou">
-						<set token="drillDown"> $drillDown$ AND cert_ou="$click.value2$" </set>
-					</condition>
-					<condition field="cert_st">
-						<set token="drillDown"> $drillDown$ AND cert_st="$click.value2$" </set>
 					</condition>
 					<condition field="scanners_found"></condition>
 				</drilldown>
@@ -973,7 +952,7 @@
 			<table>
 				<title></title>
 				<search>
-					<query>| inputlookup recon_RobotsDisallowed.csv | table ip is_disallowed disallowed uri | sort +ip $drillDown$ </query>
+					<query>| inputlookup recon_RobotsDisallowed.csv | table ip disallowed uri | sort +ip $drillDown$ </query>
 					<progress>
 						<condition match="'job.resultCount' > 0">
 							<set token="hideRobots">true</set>
@@ -990,9 +969,6 @@
 				<drilldown>
 					<condition field="ip">
 						<set token="drillDown"> | search ip="$click.value2$" </set>
-					</condition>
-					<condition field="is_disallowed">
-						<set token="drillDown"> $drillDown$ AND is_disallowed="$click.value2$" </set>
 					</condition>
 					<condition field="disallowed">
 						<set token="drillDown"> $drillDown$ AND disallowed="$click.value2$" </set>
@@ -1068,8 +1044,8 @@
 					</progress>
 				</search>
 				<option name="count">100</option>
-				<format type="color" field="priority">
-					<colorPalette type="map">$colorizeData$</colorPalette>
+				<format type="color" field="share_permissions">
+					<colorPalette type="map">$colorizeShares$</colorPalette>
 				</format>
 				<drilldown>
 					<condition field="ip">
@@ -1110,8 +1086,8 @@
 					</progress>
 				</search>
 				<option name="count">100</option>
-				<format type="color" field="priority">
-					<colorPalette type="map">$colorizeData$</colorPalette>
+				<format type="color" field="share_permissions">
+					<colorPalette type="map">$colorizeShares$</colorPalette>
 				</format>
 				<drilldown>
 					<condition field="ip">
@@ -1183,7 +1159,7 @@
 			<table>
 				<title></title>
 				<search>
-					<query>| inputlookup recon_WhatwebHttpHeaders.csv | table ip port domain http_server http_set-cookie headers | sort +ip $drillDown$ </query>
+					<query>| inputlookup recon_WhatwebHttpHeaders.csv | lookup http_status_table status AS http_status_code OUTPUTNEW status_description AS http_status_description status_type AS http_status_type | table ip port domain http_status_code http_status_description http_status_type http_server summary headers | sort +ip $drillDown$ </query>
 					<progress>
 						<condition match="'job.resultCount' > 0">
 							<set token="hideWhatweb">true</set>
@@ -1195,6 +1171,9 @@
 				</search>
 				<option name="count">100</option>
 				<format type="color" field="priority">
+					<colorPalette type="map">$colorizeData$</colorPalette>  
+				</format>
+				<format type="color" field="http_status_type">
 					<colorPalette type="map">$colorizeData$</colorPalette>
 				</format>
 				<drilldown>
@@ -1207,11 +1186,20 @@
 					<condition field="domain">
 						<set token="drillDown"> $drillDown$ AND domain="$click.value2$" </set>
 					</condition>
+					<condition field="http_status">
+						<set token="drillDown"> $drillDown$ AND http_status_code="$click.value2$" </set>
+					</condition>
+					<condition field="http_status_description">
+						<set token="drillDown"> $drillDown$ AND http_status_description="$click.value2$" </set>
+					</condition>
+					<condition field="http_status_type">
+						<set token="drillDown"> $drillDown$ AND http_status_type="$click.value2$" </set>
+					</condition>
 					<condition field="http_server">
 						<set token="drillDown"> $drillDown$ AND http_server="$click.value2$" </set>
 					</condition>
-					<condition field="http_set-cookie">
-						<set token="drillDown"> $drillDown$ AND http_set-cookie="$click.value2$" </set>
+					<condition field="summary">
+						<set token="drillDown"> $drillDown$ AND summary="$click.value2$" </set>
 					</condition>
 					<condition field="headers">
 						<set token="drillDown"> $drillDown$ AND headers="$click.value2$" </set>
