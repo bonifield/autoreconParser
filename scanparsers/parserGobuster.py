@@ -13,14 +13,14 @@ def gobuster_parser(inputFile, inputfilename):
 		d["log_time"] = log_time
 		d["scanner"] = "gobuster"
 		d["scanfile"] = inputfilename
-		l = line.split()
+		#l = line.split()
 		try:
-			url = l[0].strip()
+			url = line.split("(")[0].strip()
 			d["url"] = url
 		except:
 			pass
 		try:
-			http_status = l[2].replace(")","").strip()
+			http_status = line.split("(")[1].split(")")[0].split()[-1].replace(")","").strip()
 			d["http_status"] = http_status
 		except:
 			pass
