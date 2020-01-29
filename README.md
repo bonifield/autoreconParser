@@ -5,6 +5,7 @@ Parses various scan outputs into JSON, meant to be used with the awesome [AutoRe
 ```
 v1.0.2 - 2020-01-28
 - updated WhatWeb parser and main script, fixed multiple issues with GoBuster parser
+- Splunk dashboard updates
 
 v1.0.1 - 2020-01-24
 - added epoch timestamps to the output filename
